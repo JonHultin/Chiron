@@ -30,6 +30,11 @@ public abstract class ActorEventListener<T extends Actor> {
 	public abstract void update();
 	
 	/**
+	 * Updates the current movement of the {@link Actor} using this event listener.
+	 */
+	public abstract void updateMovement();
+	
+	/**
 	 * Registers the {@link Actor} using this event listener into the game world.
 	 */
 	public abstract void register();
