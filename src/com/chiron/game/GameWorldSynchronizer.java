@@ -1,7 +1,5 @@
 package com.chiron.game;
 
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Phaser;
@@ -22,32 +20,44 @@ public class GameWorldSynchronizer {
 		this.world = world;
 	}
 	
-	public void preSync() {
-		for (Enumeration<Player> $enum = Collections.enumeration(world.getPlayers()); $enum.hasMoreElements();) {
-			Player player = $enum.nextElement();
+	public void sync() {
+		preSync();
+		onSync();
+		postSync();
+	}
+	
+	private void preSync() {
+		System.out.println("Prep Sync");
+		for (Player player : world.getPlayers()) {
 			player.getEventHandler().updateMovement();
 		}
 		phaser.bulkRegister(world.getPlayers().size());
 	}
 	
-	public void onSync() {
-		for (Enumeration<Player> $enum = Collections.enumeration(world.getPlayers()); $enum.hasMoreElements();) {
-			try {
-			Player player = $enum.nextElement();
-			service.execute(() -> player.getEventHandler().update());
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				phaser.arriveAndDeregister();
-			}
+	private void onSync() {
+		System.out.println("Sync");
+		for (Player player : world.getPlayers()) {
+			service.execute(() -> {
+				synchronized (player) {
+					try {
+						player.getEventHandler().update();
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						phaser.arriveAndDeregister();
+					}
+				}
+			});
 		}
 		phaser.arriveAndAwaitAdvance();
 	}
 	
-	public void postSync() {
-		for (Enumeration<Player> $enum = Collections.enumeration(world.getPlayers()); $enum.hasMoreElements();) {
-			Player player = $enum.nextElement();
+	private void postSync() {
+		System.out.println("Post Sync");
+		for (Player player : world.getPlayers()) {
+			player.getChannel().flush();
 			player.getUpdateFlags().clear();
+			System.out.println("flush");
 		}
 	}
 }

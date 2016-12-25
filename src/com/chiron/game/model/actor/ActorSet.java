@@ -5,7 +5,6 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 
 /**
@@ -49,9 +48,6 @@ public final class ActorSet<T extends Actor> {
 	 * @param actor the actor to be added to this set.
 	 */
 	public void add(T actor) {
-		Preconditions.checkArgument(indices.isEmpty(), "Actor set is full.");
-		Preconditions.checkArgument(actors.contains(actor), "Actor already present.");
-		
 		actor.setIndex(indices.poll());
 		actors.add(actor);
 	}
@@ -62,8 +58,6 @@ public final class ActorSet<T extends Actor> {
 	 * @param actor the actor to be removed from this set, if present.
 	 */
 	public void remove(T actor) {
-		Preconditions.checkArgument(!actors.contains(actor), "Actor isn't present.");
-		
 		indices.add(actor.getIndex());
 		actors.remove(actor);
 	}

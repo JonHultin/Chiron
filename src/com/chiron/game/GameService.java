@@ -13,8 +13,9 @@ public final class GameService extends AbstractScheduledService {
 	}
 	
 	@Override protected void runOneIteration() throws Exception {
-		world.getScheduler().process();
 		world.deque();
+		world.getScheduler().process();		
+		world.getSynchronizer().sync();
 	}
 
 	@Override protected Scheduler scheduler() {

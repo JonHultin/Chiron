@@ -1,6 +1,9 @@
 package com.chiron.game.model.actor.player;
 
 import com.chiron.game.model.actor.ActorEventListener;
+import com.chiron.network.message.encoders.RegionUpdateEncoder;
+
+import io.netty.buffer.ByteBuf;
 
 public final class PlayerEventHandler extends ActorEventListener<Player> {
 
@@ -9,18 +12,30 @@ public final class PlayerEventHandler extends ActorEventListener<Player> {
 	}
 
 	@Override public void update() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
-	@Override public void register() {
-		// TODO Auto-generated method stub
+	@Override public void updateMovement() {
 		
+	}
+	
+	@Override public void register() {
+		ByteBuf message = getActor().getChannel().alloc().buffer();
+		message.writeByte(2);
+		message.writeByte(0);
+		message.writeByte(0);
+		message.writeByte(0);
+		message.writeByte(0);
+		message.writeByte(1);
+		message.writeShort(getActor().getIndex());
+		message.writeByte(0);
+		getActor().getChannel().writeAndFlush(message);
+		getActor().write(new RegionUpdateEncoder());
+		getActor().getWorld().register(getActor());	
 	}
 
 	@Override public void unregister() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 }
