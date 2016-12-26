@@ -31,6 +31,7 @@ public abstract class GsonToCollectionParser<T> {
 				JsonObject data = (JsonObject) array.get(index);
 				collection.add(parseElement(data, builder));
 			}
+			reader.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

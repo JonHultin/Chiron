@@ -1,4 +1,4 @@
-package com.chiron.network.channel.handlers;
+package com.chiron.network.channel.codec.game;
 
 import java.util.List;
 
@@ -10,11 +10,11 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 
-public final class MessageInboundHandler extends ByteToMessageDecoder {
+public final class GameDecoder extends ByteToMessageDecoder {
 
 	private final SecureCipher secureRead;
 	
-	public MessageInboundHandler(SecureCipher secureRead) {
+	public GameDecoder(SecureCipher secureRead) {
 		this.secureRead = secureRead;
 	}
 	

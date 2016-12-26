@@ -1,5 +1,7 @@
 package com.chiron.network.message.encoders;
 
+import java.util.function.Predicate;
+
 import com.chiron.game.model.actor.player.Player;
 import com.chiron.game.region.RegionElement;
 import com.chiron.game.region.RegionElements;
@@ -22,10 +24,14 @@ public class RegionUpdateEncoder extends MessageEncoder {
 		writer.writeAddendShortLE(player.getPosition().getLocalY());
 		writer.writeAddendShort(player.getPosition().getLocalX());
 		for(int xCalc = (player.getPosition().getRegionX() - 6) / 8; xCalc <= ((player.getPosition().getRegionX() + 6) / 8); xCalc++) {
+
 			for(int yCalc = (player.getPosition().getRegionY() - 6) / 8; yCalc <= ((player.getPosition().getRegionY() + 6) / 8); yCalc++) {
+
 				int region = yCalc + (xCalc << 8); 
+
 				if(forceSend || ((yCalc != 49) && (yCalc != 149) && (yCalc != 147) && (xCalc != 50) && ((xCalc != 49) || (yCalc != 47)))) {
-					RegionElement element = RegionElements.getRegionElements().get(region);
+					Predicate<RegionElement> filter = $it -> $it.getId() == region;
+					RegionElement element = RegionElements.getRegionElements().stream().filter(filter).findFirst().get();
 					if(element == null) {
 						element = new RegionElement(0, new int[] { 0, 0, 0, 0});
 					}

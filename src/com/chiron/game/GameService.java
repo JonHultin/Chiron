@@ -13,13 +13,18 @@ public final class GameService extends AbstractScheduledService {
 	}
 	
 	@Override protected void runOneIteration() throws Exception {
-		world.deque();
 		world.getScheduler().process();		
 		world.getSynchronizer().sync();
+		System.out.println("Game Server Cycle Complete.");
 	}
 
 	@Override protected Scheduler scheduler() {
 		return Scheduler.newFixedRateSchedule(600, 600, TimeUnit.MILLISECONDS);
 	}
 
+    @Override
+    protected String serviceName() {
+        return "Chiron Game Thread";
+    }
+    
 }

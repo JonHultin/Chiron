@@ -1,4 +1,4 @@
-package com.chiron.network.channel.handlers;
+package com.chiron.network.channel.codec.game;
 
 import com.chiron.network.message.Message;
 import com.chiron.network.message.MessageDefinition;
@@ -8,11 +8,11 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
-public final class MessageOutboundHandler extends MessageToByteEncoder<Message> {
+public final class GameEncoder extends MessageToByteEncoder<Message> {
 
 	private final SecureCipher secureWrite;
 	
-	public MessageOutboundHandler(SecureCipher secureWrite) {
+	public GameEncoder(SecureCipher secureWrite) {
 		this.secureWrite = secureWrite;
 	}
 	

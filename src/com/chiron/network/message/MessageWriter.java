@@ -23,6 +23,14 @@ public final class MessageWriter extends DefaultByteBufHolder {
 
 	private int bitIndex;
 
+	public MessageWriter() {
+		this(MessageDefinition.RAW, -1);
+	}
+	
+	public MessageWriter(int opcode) {
+		this(MessageDefinition.STANDARD, opcode);
+	}
+	
 	public MessageWriter(MessageDefinition definition, int opcode) {
 		super(ALLOC.buffer());
 		this.definition = definition;

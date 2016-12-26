@@ -16,7 +16,7 @@ public final class RegionElements extends GsonToCollectionParser<RegionElement> 
 	public RegionElements() {
 		super(REGION_ELEMENTS, "./data/json/region/region_elements.json");
 	}
-
+	
 	public static ImmutableList<RegionElement> getRegionElements() {
 		return ImmutableList.copyOf(REGION_ELEMENTS);
 	}
