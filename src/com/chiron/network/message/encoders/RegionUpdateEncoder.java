@@ -1,6 +1,6 @@
 package com.chiron.network.message.encoders;
 
-import java.util.function.Predicate;
+import java.util.Arrays;
 
 import com.chiron.game.model.actor.player.Player;
 import com.chiron.game.region.RegionElement;
@@ -13,32 +13,34 @@ public class RegionUpdateEncoder extends MessageEncoder {
 
 	@Override protected MessageWriter encode(Player player) {
 		MessageWriter writer = new MessageWriter(MessageDefinition.SHORT, 142);
-		boolean forceSend = true;
-		if((((player.getPosition().getRegionX() / 8) == 48) || ((player.getPosition().getRegionX() / 8) == 49)) && ((player.getPosition().getRegionY() / 8) == 48)) {
-			forceSend = false;
+		boolean force = true;
+		
+		if ((player.getPosition().getRegionX() / 8) == 48 || (player.getPosition().getRegionX() / 8) == 49 && (player.getPosition().getRegionY() / 8) == 48) {
+			force = false;
 		}
-		if(((player.getPosition().getRegionX() / 8) == 48) && ((player.getPosition().getRegionY() / 8) == 148)) {
-			forceSend = false;
+		
+		if ((player.getPosition().getRegionX() / 8) == 48 || (player.getPosition().getRegionY() / 8) == 148) {
+			force = false;
 		}
 		writer.writeAddendShort(player.getPosition().getRegionX());
 		writer.writeAddendShortLE(player.getPosition().getLocalY());
 		writer.writeAddendShort(player.getPosition().getLocalX());
-		for(int xCalc = (player.getPosition().getRegionX() - 6) / 8; xCalc <= ((player.getPosition().getRegionX() + 6) / 8); xCalc++) {
-
-			for(int yCalc = (player.getPosition().getRegionY() - 6) / 8; yCalc <= ((player.getPosition().getRegionY() + 6) / 8); yCalc++) {
-
-				int region = yCalc + (xCalc << 8); 
-
-				if(forceSend || ((yCalc != 49) && (yCalc != 149) && (yCalc != 147) && (xCalc != 50) && ((xCalc != 49) || (yCalc != 47)))) {
-					Predicate<RegionElement> filter = $it -> $it.getId() == region;
-					RegionElement element = RegionElements.getRegionElements().stream().filter(filter).findFirst().get();
-					if(element == null) {
-						element = new RegionElement(0, new int[] { 0, 0, 0, 0});
+		for (int xCalc = (player.getPosition().getRegionX() - 6) / 8; xCalc <= ((player.getPosition().getRegionX() + 6) / 8); xCalc++) {
+			for (int yCalc = (player.getPosition().getRegionY() - 6) / 8; yCalc <= ((player.getPosition().getRegionY() + 6) / 8); yCalc++) {
+				int regionId = yCalc + (xCalc << 8);
+				if (force || ((yCalc != 49) && (yCalc != 149) && (yCalc != 147) && (xCalc != 50) && ((xCalc != 49) || (yCalc != 47)))) {
+					RegionElement element = RegionElements.getRegionElements().stream().filter($it -> $it.getId() == regionId).findFirst().get();
+					int[] keys = element.getKeys();
+					System.out.println("Id: " + element.getId() + "Keys: " + Arrays.toString(keys));
+					if (keys == null) {
+						keys = new int[4];
+						for (int i = 0; i < keys.length; i++) {
+							keys[i] = 0;
+						}
 					}
-					writer.writeInteger(element.getKeys()[0]);
-					writer.writeInteger(element.getKeys()[1]);
-					writer.writeInteger(element.getKeys()[2]);
-					writer.writeInteger(element.getKeys()[3]);
+					for (int key : keys) {
+						writer.writeInteger(key);
+					}
 				}
 			}
 		}

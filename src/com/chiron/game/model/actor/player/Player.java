@@ -26,7 +26,7 @@ public final class Player extends Actor {
 	}
 	
 	public void write(MessageEncoder encoder) {
-		channel.write(encoder.handle(this), channel.voidPromise());
+		channel.writeAndFlush(encoder.handle(this), channel.voidPromise());
 	}
 	
 	public Channel getChannel() {

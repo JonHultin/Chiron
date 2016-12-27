@@ -13,6 +13,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 public final class LoginEncoder extends MessageToByteEncoder<LoginResponse> {
 	
 	@Override protected void encode(ChannelHandlerContext ctx, LoginResponse msg, ByteBuf out) throws Exception {
+		
 		out.writeByte(getResponseCode(msg));
 		out.writeByte(0);
 		out.writeByte(0);

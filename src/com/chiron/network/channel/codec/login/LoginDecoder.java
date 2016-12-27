@@ -51,7 +51,7 @@ public final class LoginDecoder extends ByteToMessageDecoder {
 		SecureCipher secureWrite = new SecureCipher(seed);
 		String username = Longs.toString(in.readLong());
 		String password = Strings.readString(in);
-		ctx.writeAndFlush(new LoginResponse(username, password, secureRead, secureWrite));
+		ctx.writeAndFlush(new LoginResponse(username, password, secureRead, secureWrite, 2));
 	}
 
 }

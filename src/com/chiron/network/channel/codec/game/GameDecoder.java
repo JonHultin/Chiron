@@ -30,7 +30,7 @@ public final class GameDecoder extends ByteToMessageDecoder {
 		if (length > in.readableBytes()) {
 			return;
 		}
-		//TODO handle in-bound messages
+		System.out.println("Message In = [opcode = " + opcode + " length = " + length + " definition = " + definition + "]");
 	}
 
 }
